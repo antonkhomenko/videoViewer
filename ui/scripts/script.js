@@ -77,6 +77,24 @@ function hoverFunc(event) {
     }
 }
 
+const expandSettingsContainer = document.getElementsByClassName('expandSettingsContainer');
+const settingsWindows = [...document.querySelectorAll('.settingsWindow')];
+
+
+
+for(let i = 0; i < expandSettingsContainer.length; i++) {
+    expandSettingsContainer[i].onclick = (event) => {
+        let targetElem = expandSettingsContainer[i].parentElement;
+        settingsWindows.forEach(item => {
+            if(item.className != targetElem.className) {
+                item.classList.toggle('invisibleSettingWindow');
+            } else {
+                item.classList.toggle('expandedWindow');
+            }
+        })
+    };
+}
+
 
 
 

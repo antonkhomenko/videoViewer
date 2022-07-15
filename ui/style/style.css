@@ -188,15 +188,49 @@ body {
     font-size: 24px;
     font-weight: 900;
     text-align: center;
-    width: 80%;
+    width: 60%;
     color: #5b1ceb;
     background-color: white;
     border-radius: 15px;
     padding: 3px 0;
+    cursor: pointer;
 }
 
 .settingsContainerBdark {
     color: #00015c !important   ;
+}
+
+.expandSettingsContainer {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid white;
+    box-sizing: border-box;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.expandSettingsContainer:hover .expandSettingsContainer img{
+    transform: scale(1.2);
+}
+
+.expandedWindow {
+    width: 100% !important;
+    border: none !important;
+}
+
+.invisibleSettingWindow {
+    display: none!important;
+    width: 0px;
+}
+
+.expandSettingsContainer > img {
+    width: 80%;
+    height: 80%;
 }
 
 /*container in Settings */
@@ -209,6 +243,8 @@ body {
     box-sizing: border-box;
     align-items: center;
     border-right: 3px solid white;
+    position: relative;
+    transition: .5s;
 }
 
 .settingsProxyContainer {
@@ -219,6 +255,8 @@ body {
     box-sizing: border-box;
     align-items: center;
     border-right: 3px solid white;
+    position: relative;
+    transition: .5s;
 }
 
 .settingsCommonContainer {
@@ -228,6 +266,7 @@ body {
     flex-direction: column;
     box-sizing: border-box;
     align-items: center;
+    transition: .5s;
 }
 
 /*End Container in Settings*/
