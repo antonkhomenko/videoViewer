@@ -101,6 +101,21 @@ body {
     font-size: 16px;
 }
 
+#searchInput::placeholder {
+    color: #fff;
+    opacity: .5;
+}
+
+[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 15px;
+    width: 15px;
+    background-image: url("../imgs/clearIcon.png");
+    background-size: 15px 15px;
+    background-repeat: no-repeat;
+}
+
 #searchBtn {
     height: calc(100% + 6px);
     width: 15%;
@@ -137,6 +152,33 @@ body {
     border: 3px solid white;
     border-radius: 15px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px 10px 10px;
+    box-sizing: border-box;
+}
+
+.settingsContainer > div {
+    width: 33.333%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.settingsContainer > div > b {
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.settingsProxyContainer {
+    border-right: 3px solid white;
+}
+
+.settingsAccountsContainer {
+    border-right: 3px solid white;
 }
 
 .settingsContainer::before {
