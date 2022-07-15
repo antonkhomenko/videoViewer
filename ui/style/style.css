@@ -214,7 +214,7 @@ body {
     align-items: center;
 }
 
-.expandSettingsContainer:hover .expandSettingsContainer img{
+.expandSettingsContainer:hover > img{
     transform: scale(1.2);
 }
 
