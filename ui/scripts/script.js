@@ -28,14 +28,16 @@ const theme = {
     icons() {
         return this.button.children;
     },
-    settingContainer: document.querySelector('.settingsContainer'),
+    headerSettingsContainers: document.querySelectorAll('.settingsContainer > div > b'),
+    currentWindowSettings: document.querySelector('.currentWindow'),
 };
 
 
 
 theme.button.addEventListener('click', () => {
     theme.button.classList.toggle('rotateElem');
-    theme.settingContainer.classList.toggle('settingsContainerDarkMode');
+    theme.currentWindowSettings.classList.toggle('currentWindowDark');
+    theme.headerSettingsContainers.forEach(item => item.classList.toggle('settingsContainerBdark'));
     if(!theme.currentTheme().includes('darkTheme')) {
         document.body.classList.add('darkTheme');
         theme.icons()[0].style.display = "block";

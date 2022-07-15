@@ -147,7 +147,7 @@ body {
 
 .settingsContainer {
     width: 100%;
-    height: 500px   ;
+    height: 550px;
     margin-top: 50px;
     border: 3px solid white;
     border-radius: 15px;
@@ -155,49 +155,105 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px 10px 10px 10px;
+    padding: 30px 10px 10px 10px;
     box-sizing: border-box;
 }
 
-.settingsContainer > div {
-    width: 33.333%;
-    height: 100%;
+.currentWindow {
+    width: 200px;
+    height: 23px;
     display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid white;
+    border-radius: 15px;
+    position: absolute;
+    top: -16px;
+    left: calc(58% - 200px);
+    background-color: #4D18EEFF;
+}
+
+.currentWindow > img {
+    width: 18px;
+    height: 18px;
+    margin-left: 2px;
+}
+
+.currentWindow span {
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .settingsContainer > div > b {
     font-size: 24px;
     font-weight: 900;
     text-align: center;
+    width: 80%;
+    color: #5b1ceb;
+    background-color: white;
+    border-radius: 15px;
+    padding: 3px 0;
+}
+
+.settingsContainerBdark {
+    color: #00015c !important   ;
+}
+
+/*container in Settings */
+
+.settingsAccountsContainer {
+    width: 33.333%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    align-items: center;
+    border-right: 3px solid white;
 }
 
 .settingsProxyContainer {
+    width: 33.333%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    align-items: center;
     border-right: 3px solid white;
 }
 
-.settingsAccountsContainer {
-    border-right: 3px solid white;
+.settingsCommonContainer {
+    width: 33.333%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    align-items: center;
 }
 
-.settingsContainer::before {
-    content: 'Параметры ⚙';
-    text-align: center;
-    position: absolute;
-    margin: 0 auto;
-    font-weight: bold;
-    top: -16px;
-    left: calc(58% - 200px);
-    width: 200px;
-    height: 23px;
-    line-height: 23px;
-    background-color: #4D18EEFF;
-    border: 3px solid white;
-    border-radius: 15px;
-}
+/*End Container in Settings*/
 
-.settingsContainerDarkMode::before {
+
+/*.settingsContainer::before {*/
+/*    content: 'Параметры ⚙';*/
+/*    text-align: center;*/
+/*    position: absolute;*/
+/*    margin: 0 auto;*/
+/*    font-weight: bold;*/
+/*    top: -16px;*/
+/*    left: calc(58% - 200px);*/
+/*    width: 200px;*/
+/*    height: 23px;*/
+/*    line-height: 23px;*/
+/*    background-color: #4D18EEFF;*/
+/*    border: 3px solid white;*/
+/*    border-radius: 15px;*/
+/*}*/
+
+/*.settingsContainerDarkMode::before {*/
+/*    background-color: #000165 !important;*/
+/*}*/
+
+.currentWindowDark {
     background-color: #000165 !important;
 }
 
