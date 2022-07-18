@@ -30,6 +30,8 @@ const theme = {
     },
     headerSettingsContainers: document.querySelectorAll('.settingsContainer > div > b'),
     currentWindowSettings: document.querySelector('.currentWindow'),
+    accountItemTitle: () => { return [...document.getElementsByClassName('accountItemTitle')] },
+    accountItemsInput: () => { return [...document.querySelectorAll('.accountItem > div > input')] },
 };
 
 
@@ -38,14 +40,20 @@ theme.button.addEventListener('click', () => {
     theme.button.classList.toggle('rotateElem');
     theme.currentWindowSettings.classList.toggle('currentWindowDark');
     theme.headerSettingsContainers.forEach(item => item.classList.toggle('settingsContainerBdark'));
+     theme.accountItemTitle().forEach(item => item.classList.toggle('accountItemDarkMode'));
+     theme.accountItemsInput().forEach(item => item.classList.toggle('accountItemDarkMode'));
     if(!theme.currentTheme().includes('darkTheme')) {
         document.body.classList.add('darkTheme');
         theme.icons()[0].style.display = "block";
         theme.icons()[1].style.display = "none";
+        // theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
+        // theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
     } else {
         document.body.classList.remove('darkTheme');
         theme.icons()[0].style.display = "none";
         theme.icons()[1].style.display = "block";
+        // theme.accountItemTitle().forEach(item => item.classList.remove('accountItemDarkMode'));
+        // theme.accountItemsInput().forEach(item => item.classList.remove('accountItemDarkMode'));
     }
 })
 
@@ -79,21 +87,104 @@ function hoverFunc(event) {
 
 const expandSettingsContainer = document.getElementsByClassName('expandSettingsContainer');
 const settingsWindows = [...document.querySelectorAll('.settingsWindow')];
-
+const settingsList = [...document.querySelectorAll('.settingsList')];
 
 
 for(let i = 0; i < expandSettingsContainer.length; i++) {
     expandSettingsContainer[i].onclick = (event) => {
         let targetElem = expandSettingsContainer[i].parentElement;
+        let targetImg = expandSettingsContainer[i].children[0];
+        let targetImgSrc = targetImg.src.slice(targetImg.src.lastIndexOf('imgs/') + 5);
+        let getAccountItemExpand = () => {
+           return [...document.querySelectorAll('.accountItem > div')].slice(1);
+        };
+        if(targetImgSrc != 'collapseIcon.png') {
+            targetImg.src = './imgs/collapseIcon.png';
+            if(document.getElementsByClassName('accountItem').length != 0) {
+                getAccountItemExpand().forEach(item => item.style.justifyContent = 'center');
+            }
+        } else {
+            targetImg.src = './imgs/expandIcon.png';
+        }
+
         settingsWindows.forEach(item => {
             if(item.className != targetElem.className) {
                 item.classList.toggle('invisibleSettingWindow');
             } else {
                 item.classList.toggle('expandedWindow');
+                item.querySelector('.settingsList').classList.toggle('expandedWindow');
             }
         })
     };
 }
+
+const addListBtn = document.querySelectorAll('.addListBtn');
+
+for(let i = 0; i < addListBtn.length; i++) {
+    addListBtn[i].addEventListener('click', (event) => {
+        addListBtn[i].style.width = '0px';
+        let targetSettingList = addListBtn[i].parentElement;
+        setTimeout(() => {
+            addListBtn[i].style.display = 'none'
+            targetSettingList.classList.remove('emptySettingsList');
+            targetSettingList.classList.add('filledSettingsList');
+            targetSettingList.append(createSettingsList());
+            targetSettingList.innerHTML = targetSettingList.innerHTML + createPlusAccountItem(targetSettingList);
+            getPlusAccountItem().addEventListener('click', () => {
+                let liList = targetSettingList.querySelectorAll('li');
+                liList[liList.length - 1].after(createSettingsList());
+                if(theme.currentTheme().includes('darkTheme')) {
+                    theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
+                    theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
+                }
+            })
+            if(theme.currentTheme().includes('darkTheme')) {
+                theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
+                theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
+            }
+            if(document.querySelector('.settingsList').classList.contains('expandedWindow')) {
+               [... document.querySelectorAll('.accountItem > div')]
+                   .slice(1)
+                   .forEach(item => item.classList.add('accountItemExpanded'));
+
+            }
+        }, 500);
+    });
+}
+
+
+function createSettingsList() {
+    let elem = document.createElement('li');
+    elem.classList.add('accountItem');
+    elem.innerHTML = `
+            <div class="accountItemTitle">
+                Аккаунт 
+            </div>
+            <div class="accountItemLogin">
+                <span>Логин:</span>
+                <input type="text">
+            </div>
+            <div class="accountItemPassword">
+                <span>Пароль:</span>
+                <input type="text">
+            </div>`;
+     return elem;
+}
+
+function createPlusAccountItem(elem) {
+    return `
+    <button class="plusAccountItem">
+        <svg viewBox="0 0 448 512">
+        <path d="M384 32H64C28.65 32 0 60.66 0 96v320c0 35.34 28.65 64 64 64h320c35.35 0 64-28.66 64-64V96C448 60.66 419.3 32 384 32zM319.1 280h-72V352c0 13.2-10.8 24-23.1 24c-13.2 0-24-10.8-24-24V280H127.1C114.8 280 103.1 269.2 103.1 256c0-13.2 10.8-24 24-24h71.1V160c0-13.2 10.8-24 24-24c13.2 0 23.1 10.8 23.1 24v72h72c13.2 0 23.1 10.8 23.1 24C343.1 269.2 333.2 280 319.1 280z"/>
+        </svg>
+    </button>
+    `;
+}
+
+function getPlusAccountItem() {
+    return document.getElementsByClassName('plusAccountItem')[0];
+}
+
 
 
 
