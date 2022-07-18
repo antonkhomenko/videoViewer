@@ -322,6 +322,10 @@ body {
     position: relative;
 }
 
+.settingsList .accountItem:last-of-type {
+    margin-bottom: 15px;
+}
+
 .accountItemExpanded {
     justify-content: center;
 }
@@ -448,6 +452,48 @@ body {
 
 .plusAccountItem:hover {
     opacity: 1;
+}
+
+.proxyItem {
+    width: 80%;
+    height: 10%;
+    list-style-type: none;
+    border: 3px solid #ffffff;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px auto;
+}
+
+.settingsList .proxyItem:nth-of-type(1) {
+    margin-top: 0;
+}
+
+.proxyCounter {
+    height: 100%;
+    width: 15%;
+    border-right: 3px solid #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*box-sizing: border-box;*/
+    font-weight: bold;
+    max-width: 50px;
+    font-size: 20px;
+}
+
+.proxyInput {
+    flex-grow: 1;
+    height: 100%;
+    outline: none;
+    border-radius: 0 10px 10px 0;
+    /*box-sizing: border-box;*/
+    border: none;
+    background: transparent;
+    padding: 0 15px;
+    color: white;
+    font-size: 16px;
 }
 
 footer {

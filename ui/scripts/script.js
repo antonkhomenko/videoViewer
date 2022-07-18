@@ -124,31 +124,48 @@ for(let i = 0; i < addListBtn.length; i++) {
     addListBtn[i].addEventListener('click', (event) => {
         addListBtn[i].style.width = '0px';
         let targetSettingList = addListBtn[i].parentElement;
-        setTimeout(() => {
-            addListBtn[i].style.display = 'none'
-            targetSettingList.classList.remove('emptySettingsList');
-            targetSettingList.classList.add('filledSettingsList');
-            targetSettingList.append(createSettingsList());
-            targetSettingList.innerHTML = targetSettingList.innerHTML + createPlusAccountItem(targetSettingList);
-            getPlusAccountItem().addEventListener('click', () => {
-                let liList = targetSettingList.querySelectorAll('li');
-                liList[liList.length - 1].after(createSettingsList());
-                if(theme.currentTheme().includes('darkTheme')) {
+        if(targetSettingList.parentElement.classList.contains('settingsAccountsContainer')) {
+            setTimeout(() => {
+                addListBtn[i].style.display = 'none'
+                targetSettingList.classList.remove('emptySettingsList');
+                targetSettingList.classList.add('filledSettingsList');
+                targetSettingList.append(createSettingsList());
+                targetSettingList.innerHTML = targetSettingList.innerHTML + createPlusAccountItem();
+                getPlusAccountItem()[0].addEventListener('click', () => {
+                    let liList = targetSettingList.querySelectorAll('li');
+                    liList[liList.length - 1].after(createSettingsList());
+                    if (theme.currentTheme().includes('darkTheme')) {
+                        theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
+                        theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
+                    }
+                })
+                if (theme.currentTheme().includes('darkTheme')) {
                     theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
                     theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
                 }
-            })
-            if(theme.currentTheme().includes('darkTheme')) {
-                theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
-                theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
-            }
-            if(document.querySelector('.settingsList').classList.contains('expandedWindow')) {
-               [... document.querySelectorAll('.accountItem > div')]
-                   .slice(1)
-                   .forEach(item => item.classList.add('accountItemExpanded'));
+                if (document.querySelector('.settingsList').classList.contains('expandedWindow')) {
+                    [...document.querySelectorAll('.accountItem > div')]
+                        .slice(1)
+                        .forEach(item => item.classList.add('accountItemExpanded'));
+                }
+            }, 500);
+        } else {
+            setTimeout(() => {
+                targetSettingList.classList.remove('emptySettingsList');
+                targetSettingList.classList.add('filledSettingsList');
+                let proxyI = createProxyItem();
+                targetSettingList.append(proxyI());
+                targetSettingList.innerHTML = targetSettingList.innerHTML + createPlusAccountItem();
+                let getProxyList = () => {
+                    return targetSettingList.querySelectorAll('li');
+                }
 
-            }
-        }, 500);
+                getPlusAccountItem()[0].addEventListener('click', () => {
+                    let arr = getProxyList();
+                    arr[arr.length - 1].after(proxyI());
+                });
+            }, 500);
+        }
     });
 }
 
@@ -171,7 +188,7 @@ function createSettingsList() {
      return elem;
 }
 
-function createPlusAccountItem(elem) {
+function createPlusAccountItem() {
     return `
     <button class="plusAccountItem">
         <svg viewBox="0 0 448 512">
@@ -182,7 +199,22 @@ function createPlusAccountItem(elem) {
 }
 
 function getPlusAccountItem() {
-    return document.getElementsByClassName('plusAccountItem')[0];
+    return document.getElementsByClassName('plusAccountItem');
+}
+
+function createProxyItem() {
+    let counter = 1;
+    return function() {
+        let elem = document.createElement('li');
+        elem.classList.add('proxyItem');
+        elem.innerHTML = `
+         <span class="proxyCounter">
+           ${counter++}
+         </span>
+         <input type="text" placeholder="0.0.0.0:0000" class="proxyInput">
+        `;
+        return elem;
+    }
 }
 
 
