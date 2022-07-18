@@ -32,6 +32,7 @@ const theme = {
     currentWindowSettings: document.querySelector('.currentWindow'),
     accountItemTitle: () => { return [...document.getElementsByClassName('accountItemTitle')] },
     accountItemsInput: () => { return [...document.querySelectorAll('.accountItem > div > input')] },
+    submitSettingsBtn: document.getElementById('submitSettingsBtn'),
 };
 
 
@@ -42,6 +43,7 @@ theme.button.addEventListener('click', () => {
     theme.headerSettingsContainers.forEach(item => item.classList.toggle('settingsContainerBdark'));
      theme.accountItemTitle().forEach(item => item.classList.toggle('accountItemDarkMode'));
      theme.accountItemsInput().forEach(item => item.classList.toggle('accountItemDarkMode'));
+     theme.submitSettingsBtn.classList.toggle('submitSettingsBtnDarkTheme');
     if(!theme.currentTheme().includes('darkTheme')) {
         document.body.classList.add('darkTheme');
         theme.icons()[0].style.display = "block";
@@ -216,6 +218,15 @@ function createProxyItem() {
         return elem;
     }
 }
+
+const browserCount = document.getElementById('browserCount');
+const browserRange = document.getElementById('browserRange');
+
+browserCount.innerText = browserRange.value;
+
+browserRange.addEventListener('input', () => {
+    browserCount.innerText = browserRange.value;
+})
 
 
 

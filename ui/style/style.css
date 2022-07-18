@@ -496,6 +496,88 @@ body {
     font-size: 16px;
 }
 
+::placeholder {
+    color: lightgray;
+}
+
+.settingsCommonContent {
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 15px;
+}
+
+.browserForm > span:nth-of-type(1) {
+    width: 100%;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.browserForm {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.cashForm {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.cashForm > span {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.cashFormAnswerWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+#browserRange {
+    width: 70%;
+}
+
+
+#browserCount {
+    width: 15%;
+    text-align: center;
+}
+
+
+#submitSettingsBtn {
+    border: 3px solid white;
+    background: white;
+    border-radius: 15px;
+    height: 40px;
+    width: 50%;
+    box-shadow: inset 0px 0px 0px 3px #d855c2;
+    /*outline: none;*/
+    color: #d855c2;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.submitSettingsBtnDarkTheme {
+    box-shadow: inset 0px 0px 0px 3px #000117 !important;
+    color: #000117 !important;
+}
+
+
 footer {
     width: 100%;
     display: flex;
