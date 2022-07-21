@@ -426,6 +426,7 @@ body {
     border: none;
     opacity: .5;
     margin: 0 auto;
+    cursor: pointer;
 }
 
 .plusAccountItem > svg {

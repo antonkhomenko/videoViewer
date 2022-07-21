@@ -8,7 +8,7 @@ chromeOptions.addArguments("--incognito");
 
 async function openBrowser() {
     let driver = new Builder().forBrowser('chrome').build();
-     await signIn(driver, 'mamyebali1001@gmail.com', 'suka5225');
+     await signIn(driver, 'testbotantoha1@gmail.com', 'qwerty5225');
      await playVideo(driver, 'https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D');
 }
 
@@ -43,7 +43,7 @@ function start(counter, callback) {
     }
 }
 
-start(3, openBrowser);
+start(2, openBrowser);
 
 
 

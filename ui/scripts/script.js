@@ -161,23 +161,31 @@ for(let i = 0; i < addListBtn.length; i++) {
                 let getProxyList = () => {
                     return targetSettingList.querySelectorAll('li');
                 }
-
-                getPlusAccountItem()[0].addEventListener('click', () => {
+                let plusArr = getPlusAccountItem();
+                let targetPlus;
+                if(plusArr.length > 1) {
+                    targetPlus = plusArr[1];
+                } else {
+                   targetPlus = plusArr[0];
+                }
+                targetPlus.addEventListener('click', () => {
                     let arr = getProxyList();
                     arr[arr.length - 1].after(proxyI());
                 });
+
             }, 500);
         }
     });
 }
 
+let accountCounter = 1;
 
 function createSettingsList() {
     let elem = document.createElement('li');
     elem.classList.add('accountItem');
     elem.innerHTML = `
             <div class="accountItemTitle">
-                Аккаунт 
+                Аккаунт ${accountCounter++}
             </div>
             <div class="accountItemLogin">
                 <span>Логин:</span>
@@ -227,6 +235,29 @@ browserCount.innerText = browserRange.value;
 browserRange.addEventListener('input', () => {
     browserCount.innerText = browserRange.value;
 })
+
+const submitSettingsBtn = document.getElementById('submitSettingsBtn');
+
+function createUsersObject() {
+    let accountArr = [...document.getElementsByClassName('accountItem')];
+    let result = new Map();
+    accountArr.forEach(item => {
+        let accountLogin = item.querySelector('.accountItemLogin > input').value;
+        let accountPassword = item.querySelector('.accountItemPassword > input').value;
+        result.set(accountLogin, accountPassword);
+    });
+    return result;
+}
+
+submitSettingsBtn.addEventListener('click', () => {
+    let accounts = createUsersObject();
+
+
+})
+
+
+
+
 
 
 
