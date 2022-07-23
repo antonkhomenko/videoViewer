@@ -236,24 +236,33 @@ browserRange.addEventListener('input', () => {
     browserCount.innerText = browserRange.value;
 })
 
-const submitSettingsBtn = document.getElementById('submitSettingsBtn');
+
 
 function createUsersObject() {
     let accountArr = [...document.getElementsByClassName('accountItem')];
-    let result = new Map();
+    let result = {};
     accountArr.forEach(item => {
         let accountLogin = item.querySelector('.accountItemLogin > input').value;
         let accountPassword = item.querySelector('.accountItemPassword > input').value;
-        result.set(accountLogin, accountPassword);
+        result[accountLogin] = accountPassword;
     });
     return result;
 }
 
-submitSettingsBtn.addEventListener('click', () => {
-    let accounts = createUsersObject();
+let socket = io()
 
 
+let searchInput = document.getElementById("searchInput");
+
+searchBtn.addEventListener('click', () => {
+    let videoUrl = searchInput.value;
+    let accountData = createUsersObject();
+    let countOfBrowser = browserCount.innerText;
+    let data = JSON.stringify([videoUrl, countOfBrowser ,accountData]);
+    socket.emit('seleniumData', data);
 })
+
+
 
 
 

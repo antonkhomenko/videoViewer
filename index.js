@@ -1,21 +1,29 @@
-let {Builder, Key, By, until} = require("selenium-webdriver");
+let {Builder, Key, By, until, Capabilities, logging} = require("selenium-webdriver");
 let chrome = require("selenium-webdriver/chrome");
+let firefox = require("selenium-webdriver/firefox");
+let proxy = require("selenium-webdriver/proxy");
 
 
-let chromeOptions = new chrome.Options();
-chromeOptions.addArguments("--incognito");
 
 
-async function openBrowser() {
-    let driver = new Builder().forBrowser('chrome').build();
-     await signIn(driver, 'mamyebali1001@gmail.com', 'suka5225');
-     await playVideo(driver, 'https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D');
-}
+     async function openBrowser(videoUrl, login, password) {
+
+        let option = new firefox.Options()
+            .addExtensions('extension/multi_account_containers-8.0.7.xpi');
+
+        let driver = new Builder()
+            .withCapabilities(Capabilities.firefox())
+            .build();
+
+        //await signIn(driver, 'testbotantoha5@gmail.com', 'qwerty5225');
+        await signIn(driver, login, password)
+        await playVideo(driver, videoUrl);
+    }
 
 
 
 async function signIn(driver, login, password) {
-    driver.get('https://accounts.google.com/o/oauth2/auth/identifier?operation=login&state=google-%7Chttps%3A%2F%2Fmedium.com%2F%3Fsource%3Dlogin--------------------------lo_home_nav-----------%7Clogin&access_type=online&client_id=216296035834-k1k6qe060s2tp2a2jam4ljdcms00sttg.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fmedium.com%2Fm%2Fcallback%2Fgoogle&response_type=id_token%20token&scope=email%20openid%20profile&nonce=55616b24a2b6c371026bc53f77efbc845f2da851d371a1586a23971512943d3e&flowName=GeneralOAuthFlow');
+    driver.get('https://accounts.google.com/ServiceLogin/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=en&ec=65620&flowName=GlifWebSignIn&flowEntry=ServiceLogin');
     let loginInput = await driver.findElement(By.xpath('//input[@autocomplete="username"]'));
     await loginInput.sendKeys(login, Key.RETURN);
     await driver.sleep(1000);
@@ -29,23 +37,68 @@ async function signIn(driver, login, password) {
 async function playVideo(driver, videoUrl) {
     await driver.sleep(1000);
     await driver.get(videoUrl);
-    await driver.sleep(5500);
+    await driver.sleep(6000);
     let videoTimer = await driver.findElement(By.xpath('//span[@class="style-scope ytd-thumbnail-overlay-time-status-renderer"]')).getText();
     let browserCloseTimer = videoTimer.split(":")[0] * 60000 + videoTimer.split(":")[1] * 1000;
-    await driver.findElement(By.xpath('//a[@id="video-title"]')).click();
+    await driver.findElement(By.xpath('//*[@id="video-title"]')).click();
     await driver.sleep(browserCloseTimer);
     driver.close();
 }
 
-function start(counter, callback) {
-    for(let i = 0; i < counter; i++) {
-        callback();
-    }
+
+function createServer() {
+    const express = require("express");
+    const path = require("path");
+
+    const app = express();
+
+    const http = require("http");
+    const server = http.createServer(app);
+    const {Server} = require("socket.io");
+    const io = new Server(server);
+
+
+    app.use(express.static(__dirname + '/ui'));
+
+    app.get('/', function (req, res) {
+        res.sendFile(path.join(__dirname + '/ui/index.html'));
+    });
+
+
+    io.on('connection', (socket) => {
+        socket.on('seleniumData', (data) => {
+            let [videoUrl, browserCounter, accounts] = JSON.parse(data);
+            browserCounter = +browserCounter;
+            let accountsArr = Object.entries(accounts);
+            for(let i = 0; i < browserCounter; i++) {
+                let [login, password] = accountsArr.shift();
+                openBrowser(videoUrl, login, password);
+            }
+        })
+    });
+
+    server.listen(3000);
+
+    let driver = new Builder().forBrowser('chrome').build();
+    driver.get("http://localhost:3000");
+
 }
 
-start(1, openBrowser);
+// let test = wrapperOpenBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D');
+// test('mamyebali1001@gmail.com', 'suka5225');
 
 
 
+createServer();
 
+async function launch(data) {
+    let [videoUrl, browserCounter, accounts] = JSON.parse(data);
+    browserCounter = +browserCounter;
+    let accountsArr = Object.entries(accounts);
+    for(let i = 0; i < browserCounter; i++) {
+          let [login, password] = accountsArr.shift();
+        console.log(login, password);
+    }
+
+}
 
