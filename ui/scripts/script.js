@@ -43,15 +43,15 @@ theme.button.addEventListener('click', () => {
     theme.headerSettingsContainers.forEach(item => item.classList.toggle('settingsContainerBdark'));
      theme.accountItemTitle().forEach(item => item.classList.toggle('accountItemDarkMode'));
      theme.accountItemsInput().forEach(item => item.classList.toggle('accountItemDarkMode'));
-     theme.submitSettingsBtn.classList.toggle('submitSettingsBtnDarkTheme');
+     //theme.submitSettingsBtn.classList.toggle('submitSettingsBtnDarkTheme');
+     document.body.classList.toggle('darkTheme');
     if(!theme.currentTheme().includes('darkTheme')) {
-        document.body.classList.add('darkTheme');
+
         theme.icons()[0].style.display = "block";
         theme.icons()[1].style.display = "none";
         // theme.accountItemTitle().forEach(item => item.classList.add('accountItemDarkMode'));
         // theme.accountItemsInput().forEach(item => item.classList.add('accountItemDarkMode'));
     } else {
-        document.body.classList.remove('darkTheme');
         theme.icons()[0].style.display = "none";
         theme.icons()[1].style.display = "block";
         // theme.accountItemTitle().forEach(item => item.classList.remove('accountItemDarkMode'));
