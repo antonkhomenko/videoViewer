@@ -72,21 +72,26 @@ async function createServer() {
 
     io.on('connection', (socket) => {
         socket.on('seleniumData', async (data) => {
-            let [videoUrl, browserCounter, accounts] = JSON.parse(data);
-            browserCounter = +browserCounter;
-            let accountsArr = Object.entries(accounts);
-            for(let i = 0; i < browserCounter; i++) {
-                let [login, password] = accountsArr[i];
-                await openBrowser(videoUrl, login, password);
+            try {
+                let [videoUrl, browserCounter, accounts] = JSON.parse(data);
+                browserCounter = +browserCounter;
+                let accountsArr = Object.entries(accounts);
+                for (let i = 0; i < browserCounter; i++) {
+                    let [login, password] = accountsArr[i];
+                    await openBrowser(videoUrl, login, password);
+                }
+                // driver.close();
+            } catch (e) {
+                console.log(e);
             }
-            driver.close();
+
         })
     });
 
     server.listen(3000);
 
-    let driver = new Builder().forBrowser('chrome').build();
-    driver.get("http://localhost:3000");
+    // let driver = new Builder().forBrowser('chrome').build();
+    // driver.get("http://localhost:3000");
 }
 
 createServer().then((text) => console.log(text));
