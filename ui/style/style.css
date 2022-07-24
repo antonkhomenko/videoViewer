@@ -9,8 +9,6 @@ html {
 body {
     margin: 0;
     padding: 0;
-    /*min-height: 800px;*/
-    /*background: linear-gradient(blue, blueviolet, hotpink);*/
     background: linear-gradient(blue, blueviolet, hotpink);
 }
 
@@ -340,9 +338,7 @@ body {
     margin-top: 20px;
 }
 
-/*.settingsList > li:last-of-type {*/
-/*    border-radius: 0 0 15px 15px;*/
-/*}*/
+
 
 
 
