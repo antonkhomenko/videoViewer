@@ -72,7 +72,7 @@ async function createServer() {
 
     io.on('connection', (socket) => {
         socket.on('seleniumData', async (data) => {
-            try {
+
                 let [videoUrl, browserCounter, accounts] = JSON.parse(data);
                 browserCounter = +browserCounter;
                 let accountsArr = Object.entries(accounts);
@@ -81,9 +81,7 @@ async function createServer() {
                     await openBrowser(videoUrl, login, password);
                 }
                 // driver.close();
-            } catch (e) {
-                console.log(e);
-            }
+
 
         })
     });
@@ -94,7 +92,7 @@ async function createServer() {
     // driver.get("http://localhost:3000");
 }
 
-createServer().then((text) => console.log(text));
+createServer().then((text) => console.log("Сервер работает"));
 
 //openBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D', 'mamyebali1001@gmail.com', 'suka5225');
 //openBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D', 'testbotantoha3@gmail.com ', 'qwerty5225');
