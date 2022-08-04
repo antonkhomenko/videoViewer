@@ -7,11 +7,15 @@ const {ExpectedConditions} = require("protractor");
 
 
 
-async function openBrowser(videoUrl, login, password, proxy) {
+async function openBrowser(videoUrl, accountArr, proxy) {
+    if(accountArr.length === 0) {
+        return null;
+    }
+// .addArguments('fu')
      let option = new firefox.Options()
          .addArguments('--disable-notifications')
          .addArguments('--disable-popup-blocking')
-         .addArguments('fu')
+         .addArguments( "--headless", "--window-size=1920,1200")
          .addExtensions('extension/foxyproxy_standard-7.5.1.xpi');
 
     let driver = await new Builder()
@@ -19,10 +23,22 @@ async function openBrowser(videoUrl, login, password, proxy) {
         .forBrowser('firefox')
         .build();
 
-    await driver.manage().window().setRect({ x: 0, y: 0 });
+    //await driver.manage().window().setRect({ x: 0, y: 0 });
+    if(accountArr.length === 0) {
+        driver.quit();
+        return null;
+    }
 
-    await signIn(driver, login, password, videoUrl, proxy);
-    await driver.manage().window().minimize();
+    let [login, password] = accountArr.shift();
+
+    let proxy1 = proxy.shift()
+    await signIn(driver, login, password, videoUrl, proxy1);
+    //await driver.manage().window().minimize();
+    if(accountArr.length > 0) {
+        openBrowser(videoUrl, accountArr, proxy);
+    } else {
+        return;
+    }
 }
 
 async function enableProxy(driver, extensionUrl, proxy) {
@@ -40,6 +56,7 @@ async function enableProxy(driver, extensionUrl, proxy) {
     await proxyItem.click();
     await driver.findElement(By.xpath('//select/option[3]')).click();
     await driver.sleep(500);
+    console.log('Прокси подключен');
 }
 
 
@@ -50,6 +67,8 @@ async function signIn(driver, login, password, url, proxy) {
     extensionUrl = extensionUrl.split('/');
     extensionUrl[3] = 'import-proxy-list.html';
     extensionUrl = extensionUrl.join('/');
+
+
 
     await driver.sleep(2000);
     await driver.get('https://accounts.google.com/ServiceLogin/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=en&ec=65620&flowName=GlifWebSignIn&flowEntry=ServiceLogin');
@@ -64,6 +83,8 @@ async function signIn(driver, login, password, url, proxy) {
     await passwordInput.sendKeys(password);
     await passwordBtn.click();
 
+    console.log(`Выполнен вход в аккаунт ${login}`);
+
     await driver.sleep(1000);
     await enableProxy(driver, extensionUrl, proxy);
 
@@ -77,9 +98,13 @@ async function playVideo(driver, videoUrl) {
     let videoTimer = await driver.findElement(By.xpath('//span[@class="style-scope ytd-thumbnail-overlay-time-status-renderer"]')).getText();
     let browserCloseTimer = videoTimer.split(":")[0] * 60000 + videoTimer.split(":")[1] * 1000;
     await driver.findElement(By.xpath('//*[@id="video-title"]')).click();
-    setTimeout(() => {
-        driver.close();
-    }, browserCloseTimer);
+    console.log('Видео запущено');
+    // setTimeout(() => {
+    //     driver.close();
+    // }, browserCloseTimer);
+    await driver.sleep(browserCloseTimer);
+    console.log('Видео закончено');
+    await driver.quit();
 }
 
 
@@ -104,16 +129,17 @@ async function createServer(driver) {
 
 
       io.on('connection', (socket) => {
-          socket.on('seleniumData', async(data) => {
+          socket.on('seleniumData', async (data) => {
                  let [videoUrl, browserCounter, accounts, proxy] = JSON.parse(data);
                  browserCounter = +browserCounter;
                  let accountsArr = Object.entries(accounts);
-                for (let i = 0; i < browserCounter; i++) {
-                    let [login, password] = accountsArr[i];
-                    await openBrowser(videoUrl, login, password, proxy[i]);
-
-                }
-
+                  for(let i = 0; i < browserCounter; i++) {
+                        openBrowser(videoUrl, accountsArr, proxy).then(() => {
+                           if(i == browserCounter - 1) {
+                               console.log('Сеанс завершен');
+                           }
+                       })
+                  }
         });
     });
 
@@ -125,6 +151,20 @@ async function createServer(driver) {
 
 createServer().then((text) => console.log("Сервер работает"));
 
-
+async function launchBrowser(browserCounter, accountsArr, videoUrl, proxy) {
+    for (let i = 0; i < browserCounter; i++) {
+        if(browserCounter > accountsArr) {
+            break;
+        }
+        let [login, password] = accountsArr[i];
+        await openBrowser(videoUrl, login, password, proxy[i]);
+    }
+    accountsArr.splice(0, browserCounter + 1);
+    if(accountsArr.length > 0) {
+        launchBrowser(browserCounter, accountsArr, videoUrl, proxy);
+    } else {
+        return;
+    }
+}
 
 
