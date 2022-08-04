@@ -123,7 +123,7 @@ for(let i = 0; i < expandSettingsContainer.length; i++) {
 const addListBtn = document.querySelectorAll('.addListBtn');
 
 for(let i = 0; i < addListBtn.length; i++) {
-    addListBtn[i].addEventListener('click', (event) => {
+    addListBtn[i].addEventListener('click', () => {
         addListBtn[i].style.width = '0px';
         let targetSettingList = addListBtn[i].parentElement;
         if(targetSettingList.parentElement.classList.contains('settingsAccountsContainer')) {
@@ -166,7 +166,7 @@ for(let i = 0; i < addListBtn.length; i++) {
                 if(plusArr.length > 1) {
                     targetPlus = plusArr[1];
                 } else {
-                   targetPlus = plusArr[0];
+                    targetPlus = plusArr[0];
                 }
                 targetPlus.addEventListener('click', () => {
                     let arr = getProxyList();
@@ -175,8 +175,10 @@ for(let i = 0; i < addListBtn.length; i++) {
 
             }, 500);
         }
-    });
+    })
 }
+
+
 
 let accountCounter = 1;
 
@@ -234,6 +236,75 @@ browserCount.innerText = browserRange.value;
 
 browserRange.addEventListener('input', () => {
     browserCount.innerText = browserRange.value;
+});
+
+let settingsParam = document.getElementsByClassName('settingsParam')[0];
+let modal = document.getElementsByClassName('modalContainer')[0];
+let modalHeader = document.querySelector('.modalContainerHeader');
+let modalHeaderButton = modalHeader.querySelectorAll('button');
+let modalTextAccount = document.getElementById('modalTextAccount');
+let modalTextProxy = document.getElementById('modalTextProxy');
+let modalConfirm = document.getElementById('modalButtonConfirm');
+let modalText = document.getElementsByClassName('modalText');
+
+settingsParam.addEventListener('click', () => {
+    modal.classList.toggle('modalContainerVisability');
+});
+
+for(let i = 0; i < modalHeaderButton.length; i++) {
+    modalHeaderButton[i].addEventListener('click', (e) => {
+        if(i == 0) {
+            modalHeaderButton[1].classList.remove('modalButtonActive');
+            modalHeaderButton[0].classList.add('modalButtonActive');
+            modalTextAccount.classList.add('modalTextVisability');
+            modalTextProxy.classList.remove('modalTextVisability');
+        } else {
+            modalHeaderButton[0].classList.remove('modalButtonActive');
+            modalHeaderButton[1].classList.add('modalButtonActive');
+            modalTextAccount.classList.remove('modalTextVisability');
+            modalTextProxy.classList.add('modalTextVisability');
+        }
+    })
+}
+
+for(let i = 0; i < modal.children.length; i++) {
+    modal.children[i].addEventListener('click', (e) => {
+
+    });
+}
+
+modalConfirm.addEventListener('click', () => {
+    let arr = [...modalText];
+    let accountData = arr[0].value.split('\n').filter(item => item != "");
+    let proxyData = arr[1].value.split('\n').filter(item => item != "");
+    console.log(accountData, proxyData);
+    if(accountData.length > 0) {
+        addListBtn[0].click();
+        setTimeout(() => {
+            for(let i = 1; i < accountData.length; i++) {
+                document.getElementsByClassName('plusAccountItem')[0].click();
+            }
+            let loginItem = document.querySelectorAll('.accountItemLogin > input');
+            let passwordItem = document.querySelectorAll('.accountItemPassword > input');
+            console.log(loginItem);
+            for(let i = 0; i < accountData.length; i++) {
+                [login, password] = accountData[i].split(' ');
+                loginItem[i].value = login;
+                passwordItem[i].value = password;
+            }
+
+        }, 500);
+    }
+    if(proxyData.length > 0) {
+        addListBtn[1].click();
+        setTimeout(() => {
+            for(let i = 1; i < proxyData.length; i++) {
+                document.getElementsByClassName('plusAccountItem')[1].click();
+            }
+            let proxyInput = [...document.getElementsByClassName('proxyInput')];
+            proxyInput.forEach((item, index) => item.value = proxyData[index]);
+        }, 500);
+    }
 })
 
 
@@ -249,6 +320,11 @@ function createUsersObject() {
     return result;
 }
 
+function createProxyArr() {
+    let proxyArr = [... document.getElementsByClassName('proxyInput')].map(item => item.value);
+    return proxyArr;
+}
+
 let socket = io()
 
 
@@ -257,10 +333,13 @@ let searchInput = document.getElementById("searchInput");
 searchBtn.addEventListener('click', () => {
     let videoUrl = searchInput.value;
     let accountData = createUsersObject();
+    let proxy = createProxyArr();
     let countOfBrowser = browserCount.innerText;
-    let data = JSON.stringify([videoUrl, countOfBrowser ,accountData]);
+    let data = JSON.stringify([videoUrl, countOfBrowser ,accountData, proxy]);
     socket.emit('seleniumData', data);
-})
+});
+
+
 
 
 

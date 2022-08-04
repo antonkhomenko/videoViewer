@@ -22,7 +22,15 @@
         <path d="M18.36,19.36a1,1,0,0,1-.7-.29L17,18.36A1,1,0,0,1,18.36,17l.71.71a1,1,0,0,1,0,1.41A1,1,0,0,1,18.36,19.36Z"/>
     </svg>
 </div>
-
+    <div class="modalContainer">
+        <div class="modalContainerHeader">
+            <button id="modalButtonAccount">Аккаунты</button>
+            <button id="modalButtonProxy">Proxy</button>
+        </div>
+        <textarea class="modalText" id="modalTextAccount" cols="30" rows="10"></textarea>
+        <textarea class="modalText" id="modalTextProxy" cols="30" rows="10"></textarea>
+        <button id="modalButtonConfirm">Применить</button>
+    </div>
     <main class="content">
         <pre id="headerLine"></pre>
         <div class="searchContent">
@@ -41,6 +49,9 @@
                 <div class="currentWindow">
                     <span>Параметры</span>
                     <img src="imgs/settingsIcon.png" alt="settings">
+                </div>
+                <div class="settingsParam">
+                    Вставить текстом
                 </div>
                 <div class="settingsAccountsContainer settingsWindow">
                     <b>
