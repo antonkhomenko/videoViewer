@@ -267,17 +267,13 @@ for(let i = 0; i < modalHeaderButton.length; i++) {
     })
 }
 
-for(let i = 0; i < modal.children.length; i++) {
-    modal.children[i].addEventListener('click', (e) => {
 
-    });
-}
 
 modalConfirm.addEventListener('click', () => {
     let arr = [...modalText];
     let accountData = arr[0].value.split('\n').filter(item => item != "");
     let proxyData = arr[1].value.split('\n').filter(item => item != "");
-    console.log(accountData, proxyData);
+
     if(accountData.length > 0) {
         addListBtn[0].click();
         setTimeout(() => {
@@ -305,6 +301,7 @@ modalConfirm.addEventListener('click', () => {
             proxyInput.forEach((item, index) => item.value = proxyData[index]);
         }, 500);
     }
+    modal.classList.remove('modalContainerVisability');
 })
 
 
@@ -337,6 +334,7 @@ searchBtn.addEventListener('click', () => {
     let countOfBrowser = browserCount.innerText;
     let data = JSON.stringify([videoUrl, countOfBrowser ,accountData, proxy]);
     socket.emit('seleniumData', data);
+
 });
 
 

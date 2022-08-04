@@ -11,15 +11,18 @@ async function openBrowser(videoUrl, login, password, proxy) {
      let option = new firefox.Options()
          .addArguments('--disable-notifications')
          .addArguments('--disable-popup-blocking')
+         .addArguments('fu')
          .addExtensions('extension/foxyproxy_standard-7.5.1.xpi');
 
     let driver = await new Builder()
         .setFirefoxOptions(option)
-        .withCapabilities(option)
+        .forBrowser('firefox')
         .build();
 
-    //await enableProxy(driver, '5.188.44.15:49205:rRxEdiWp:FPvbys7d');
+    await driver.manage().window().setRect({ x: 0, y: 0 });
+
     await signIn(driver, login, password, videoUrl, proxy);
+    await driver.manage().window().minimize();
 }
 
 async function enableProxy(driver, extensionUrl, proxy) {
@@ -48,10 +51,11 @@ async function signIn(driver, login, password, url, proxy) {
     extensionUrl[3] = 'import-proxy-list.html';
     extensionUrl = extensionUrl.join('/');
 
+    await driver.sleep(2000);
+    await driver.get('https://accounts.google.com/ServiceLogin/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=en&ec=65620&flowName=GlifWebSignIn&flowEntry=ServiceLogin');
 
-
-    driver.get('https://accounts.google.com/ServiceLogin/identifier?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=en&ec=65620&flowName=GlifWebSignIn&flowEntry=ServiceLogin');
-    let loginInput = await driver.findElement(By.xpath('//input[@autocomplete="username"]'));
+    //let loginInput = await driver.findElement(By.xpath('//input[@autocomplete="username"]'));
+    let loginInput = await driver.findElement(By.xpath('//input[@id="identifierId"]'));
     await loginInput.sendKeys(login, Key.RETURN);
     await driver.sleep(2000);
     await driver.navigate().refresh();
@@ -60,6 +64,7 @@ async function signIn(driver, login, password, url, proxy) {
     await passwordInput.sendKeys(password);
     await passwordBtn.click();
 
+    await driver.sleep(1000);
     await enableProxy(driver, extensionUrl, proxy);
 
     await playVideo(driver, url);
@@ -72,13 +77,14 @@ async function playVideo(driver, videoUrl) {
     let videoTimer = await driver.findElement(By.xpath('//span[@class="style-scope ytd-thumbnail-overlay-time-status-renderer"]')).getText();
     let browserCloseTimer = videoTimer.split(":")[0] * 60000 + videoTimer.split(":")[1] * 1000;
     await driver.findElement(By.xpath('//*[@id="video-title"]')).click();
-    // setTimeout(() => {
-    //     driver.close();
-    // }, browserCloseTimer);
+    setTimeout(() => {
+        driver.close();
+    }, browserCloseTimer);
 }
 
 
-async function createServer() {
+
+async function createServer(driver) {
     const express = require("express");
     const path = require("path");
 
@@ -97,36 +103,27 @@ async function createServer() {
     });
 
 
-    io.on('connection', (socket) => {
-        socket.on('seleniumData', async (data) => {
-
-                let [videoUrl, browserCounter, accounts, proxy] = JSON.parse(data);
-                browserCounter = +browserCounter;
-                let accountsArr = Object.entries(accounts);
+      io.on('connection', (socket) => {
+          socket.on('seleniumData', async(data) => {
+                 let [videoUrl, browserCounter, accounts, proxy] = JSON.parse(data);
+                 browserCounter = +browserCounter;
+                 let accountsArr = Object.entries(accounts);
                 for (let i = 0; i < browserCounter; i++) {
                     let [login, password] = accountsArr[i];
                     await openBrowser(videoUrl, login, password, proxy[i]);
+
                 }
-                // driver.close();
 
-
-        })
+        });
     });
 
-    server.listen(3000);
-
-    // let driver = new Builder().forBrowser('chrome').build();
-    // driver.get("http://localhost:3000");
+      server.listen(3000);
 }
 
+
+
+
 createServer().then((text) => console.log("Сервер работает"));
-
-//openBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D', 'mamyebali1001@gmail.com', 'suka5225');
-//openBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D', 'testbotantoha3@gmail.com ', 'qwerty5225');
-//openBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat++KIKI+phantom&sp=CAISBAgDEAE%253D', 'testbotantoha4@gmail.com ', 'qwerty5225');
-//openBrowser('https://www.youtube.com/results?search_query=%5BFREE%5D+Playboi+Carti+Type+Beat+-+%22Neo%22+phantom+plugg&sp=CAISBAgDEAE%253D', 'testbotantoha5@gmail.com ', 'qwerty5225');
-
-
 
 
 
